@@ -46,7 +46,7 @@ namespace demo1
                 endpoints.MapControllers();
             });
 
-            app.UserNacos(new List<ListenerParams>()
+            app.UserNacosListening(new List<ListenerParams>()
             {
                 new ListenerParams()
                 {

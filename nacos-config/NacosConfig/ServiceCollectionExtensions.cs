@@ -11,6 +11,7 @@ using NacosConfig.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -72,8 +73,11 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="app"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UserNacos(this IApplicationBuilder app,List<ListenerParams> options)
-        { 
+        public static IApplicationBuilder UserNacosListening(this IApplicationBuilder app,List<ListenerParams> options)
+        {
+            if (options == null || !options.Any())
+                throw new ArgumentNullException(nameof(options));
+
             var lifetime = app.ApplicationServices.GetRequiredService<IApplicationLifetime>();
             var nacosClient = app.ApplicationServices.GetRequiredService<INacosClient>();
             //启动程序时开启监听
