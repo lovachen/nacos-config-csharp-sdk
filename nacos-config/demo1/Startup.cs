@@ -67,6 +67,15 @@ namespace demo1
                 }.Add(x =>
                 {
                     System.Diagnostics.Debug.WriteLine($"call back 1 {x}");
+                }),
+                new ListenerParams()
+                {
+                    DataId="com.user.servier.api",
+                    Group="DEFAULT_GROUP",
+                    Tenant="aa2f035f-7270-4d7f-94c7-85af13f5fe09",
+                }.Add(x =>
+                {
+                    System.Diagnostics.Debug.WriteLine($"dev call back >>>> {x}");
                 })
             });
         }

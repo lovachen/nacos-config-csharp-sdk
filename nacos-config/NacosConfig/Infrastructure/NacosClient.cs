@@ -176,7 +176,7 @@ namespace NacosConfig.Infrastructure
                         var res = await response.Content.ReadAsStringAsync();
                         if (!String.IsNullOrWhiteSpace(res))
                         {
-                            var config = await GetConfigAsync(new ConfigParams() { DataId = param.DataId, Group = param.Group, Tenant = param.Tenant });
+                            var config = await HttpGetConfigAsync(new ConfigParams() { DataId = param.DataId, Group = param.Group, Tenant = param.Tenant });
                             System.Diagnostics.Debug.WriteLine($"监听配置={config}");
                             await _localProcessor.SaveConfigAsync(param.DataId, param.Group, param.Tenant, config);
                             try

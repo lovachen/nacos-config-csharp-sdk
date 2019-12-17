@@ -39,7 +39,7 @@ namespace NacosConfig.Failover
         public async Task<string> GetConfigAsync(string dataId, string group, string tenant)
         {
             try
-            { 
+            {
                 string config = String.Empty;
                 string key = GetCacheKey(dataId, group, tenant);
                 if (!_cache.TryGetValue(key, out config))
@@ -112,7 +112,7 @@ namespace NacosConfig.Failover
 
                 string key = GetCacheKey(dataId, group, tenant);
                 //首次更新或写入缓存
-                _cache.AddOrUpdate(key,config,(k,v)=> config);
+                _cache.AddOrUpdate(key, config, (k, v) => config);
 
                 string file_dir = GetFilePath(dataId, group, tenant);
                 var file = new FileInfo(file_dir);
@@ -131,7 +131,8 @@ namespace NacosConfig.Failover
             }
             finally
             {
-                writerLockSlim.ExitWriteLock();
+                if (writerLockSlim.IsWriteLockHeld)
+                    writerLockSlim.ExitWriteLock();
             }
             await Task.Yield();
         }
