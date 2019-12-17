@@ -1,0 +1,253 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NacosConfig</name>
+    </assembly>
+    <members>
+        <member name="T:NacosConfig.Base.BaseParam">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:NacosConfig.Base.BaseParam.DataId">
+            <summary>
+            配置 ID。
+            </summary>
+        </member>
+        <member name="P:NacosConfig.Base.BaseParam.Group">
+            <summary>
+            配置分组。
+            </summary>
+        </member>
+        <member name="P:NacosConfig.Base.BaseParam.Tenant">
+            <summary>
+            租户信息，对应 Nacos 的命名空间字段。
+            </summary>
+        </member>
+        <member name="F:NacosConfig.Base.Constant.CLIENT_NAME">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NacosConfig.Base.Constant.LONG_TIMEOUT">
+            <summary>
+            超时等待时间 秒
+            </summary>
+        </member>
+        <member name="T:NacosConfig.Failover.ILocalProcessor">
+            <summary>
+            本地处理类
+            </summary>
+        </member>
+        <member name="M:NacosConfig.Failover.ILocalProcessor.GetConfigAsync(System.String,System.String,System.String)">
+            <summary>
+            获取配置文件内容
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NacosConfig.Failover.ILocalProcessor.SaveConfigAsync(System.String,System.String,System.String,System.String)">
+            <summary>
+            存储配置文件内容
+            </summary>
+            <param name="dataId"></param>
+            <param name="group"></param>
+            <param name="tenant"></param>
+            <param name="config"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NacosConfig.Failover.ILocalProcessor.RemoveConfigAsync(System.String,System.String,System.String)">
+            <summary>
+            移除配置本地存储值
+            </summary>
+            <param name="dataId"></param>
+            <param name="group"></param>
+            <param name="tenant"></param>
+            <returns></returns>
+        </member>
+        <member name="T:NacosConfig.Failover.LocalProcessor">
+            <summary>
+            本地处理配置
+            </summary>
+        </member>
+        <member name="M:NacosConfig.Failover.LocalProcessor.GetConfigAsync(System.String,System.String,System.String)">
+            <summary>
+            获取配置文件内容
+            </summary>
+            <param name="dataId"></param>
+            <param name="group"></param>
+            <param name="tenant"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NacosConfig.Failover.LocalProcessor.RemoveConfigAsync(System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="dataId"></param>
+            <param name="group"></param>
+            <param name="tenant"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NacosConfig.Failover.LocalProcessor.SaveConfigAsync(System.String,System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="dataId"></param>
+            <param name="group"></param>
+            <param name="tenant"></param>
+            <param name="config"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NacosConfig.Failover.LocalProcessor.GetFilePath(System.String,System.String,System.String)">
+            <summary>
+            获取配置文件目录
+            </summary>
+            <param name="dataId"></param>
+            <param name="group"></param>
+            <param name="tenant"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NacosConfig.Failover.LocalProcessor.GetCacheKey(System.String,System.String,System.String)">
+            <summary>
+            获取缓存的key
+            </summary>
+            <param name="dataId"></param>
+            <param name="group"></param>
+            <param name="tenant"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NacosConfig.INacosClient.GetConfigAsync(NacosConfig.Options.ConfigParams)">
+            <summary>
+            获取配置
+            </summary>
+            <param name="configParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NacosConfig.INacosClient.AddListenerAsync(NacosConfig.Options.ListenerParams)">
+            <summary>
+            添加监听
+            </summary>
+            <param name="listenerParams"></param>
+            <returns></returns>
+        </member>
+        <member name="T:NacosConfig.Infrastructure.NacosClient">
+            <summary>
+            nacos配置客户端
+            </summary>
+        </member>
+        <member name="M:NacosConfig.Infrastructure.NacosClient.#ctor(System.Net.Http.IHttpClientFactory,Microsoft.Extensions.Options.IOptionsMonitor{NacosConfig.Options.NacosOptions},NacosConfig.Failover.ILocalProcessor,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            
+            </summary>
+            <param name="httpClientFactory"></param>
+            <param name="optionsMonitor"></param>
+            <param name="localProcessor"></param>
+            <param name="loggerFactory"></param>
+        </member>
+        <member name="M:NacosConfig.Infrastructure.NacosClient.GetConfigAsync(NacosConfig.Options.ConfigParams)">
+            <summary>
+            获取配置 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NacosConfig.Infrastructure.NacosClient.AddListenerAsync(NacosConfig.Options.ListenerParams)">
+            <summary>
+            添加监听
+            </summary>
+            <param name="listenerParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NacosConfig.Infrastructure.NacosClient.HttpGetConfigAsync(NacosConfig.Options.ConfigParams)">
+            <summary>
+            http请求获取配置
+            </summary>
+            <param name="configParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NacosConfig.Infrastructure.NacosClient.PollingAsync(System.Object)">
+            <summary>
+            监听
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:NacosConfig.Options.ConfigParams">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:NacosConfig.Options.ListenerParams">
+            <summary>
+            监听配置参数
+            </summary>
+        </member>
+        <member name="F:NacosConfig.Options.ListenerParams.InterNum">
+            <summary>
+            锁计数
+            </summary>
+        </member>
+        <member name="P:NacosConfig.Options.ListenerParams.Callbacks">
+            <summary>
+            委托回调
+            </summary>
+        </member>
+        <member name="M:NacosConfig.Options.ListenerParams.Add(System.Action{System.String})">
+            <summary>
+            添加回调方法
+            </summary>
+            <param name="action"></param>
+            <returns></returns>
+        </member>
+        <member name="T:NacosConfig.Options.NacosOptions">
+            <summary>
+            配置
+            </summary>
+        </member>
+        <member name="P:NacosConfig.Options.NacosOptions.VHosts">
+            <summary>
+            虚拟主机地址，可带端口，例如：http://192.168.1.100:8848
+            一般是Nginx的配置地址
+            </summary>
+        </member>
+        <member name="P:NacosConfig.Options.NacosOptions.ListenInterval">
+            <summary>
+            配置监听间隔 毫秒为单位 默认1000ms
+            </summary>
+        </member>
+        <member name="M:NacosConfig.Util.MD5Util.GetMD5(System.String)">
+            <summary>
+            获取MD5
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions.AddNacos(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{NacosConfig.Options.NacosOptions})">
+            <summary>
+            Nacos DI 注入
+            </summary>
+            <param name="services"></param>
+            <param name="configure"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions.AddNacos(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+            <summary>
+            Nacos DI 注入
+            </summary>
+            <param name="services"></param>
+            <param name="configuration"></param>
+            <param name="sectionName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions.UserNacosListening(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.Collections.Generic.List{NacosConfig.Options.ListenerParams})">
+            <summary>
+            应用启动时注册监听
+            也可以不使用此方法，手动去注册监听
+            </summary>
+            <param name="app"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

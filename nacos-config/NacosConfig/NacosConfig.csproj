@@ -2,6 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PackageId>nacos-config-sdk</PackageId>
+    <Authors>cts</Authors>
+    <Product />
+    <Version>0.0.1</Version>
+    <PackageProjectUrl>https://github.com/lovachen/nacos-config-csharp-sdk</PackageProjectUrl>
+    <Description>阿里开源nacos的配置读取、监听，适配nacos 1.1.4 版本api接口</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>NacosConfig.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>NacosConfig.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
