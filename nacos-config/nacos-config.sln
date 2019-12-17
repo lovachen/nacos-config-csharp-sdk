@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NacosConfig", "NacosConfig\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "demo1", "demo1\demo1.csproj", "{2A4BC46B-4B07-4AEA-B4C5-36810012AFC9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nacos.tests", "nacos.tests\nacos.tests.csproj", "{BE04FB17-42A0-440E-9502-7EDEBC1B82A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{2A4BC46B-4B07-4AEA-B4C5-36810012AFC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A4BC46B-4B07-4AEA-B4C5-36810012AFC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A4BC46B-4B07-4AEA-B4C5-36810012AFC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE04FB17-42A0-440E-9502-7EDEBC1B82A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE04FB17-42A0-440E-9502-7EDEBC1B82A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE04FB17-42A0-440E-9502-7EDEBC1B82A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE04FB17-42A0-440E-9502-7EDEBC1B82A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -34,6 +40,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{37CC9A30-7C72-43D8-9EF9-4E861C6A7FAA} = {7D65223B-57B6-4319-9E5F-0AE2A84975A4}
 		{2A4BC46B-4B07-4AEA-B4C5-36810012AFC9} = {C5ED5FD0-FFAF-418E-AA65-8410FA117C83}
+		{BE04FB17-42A0-440E-9502-7EDEBC1B82A1} = {03E40784-448B-42D7-9D7F-6F686E2D49B8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {58DCF384-7AB3-4EF8-BA6F-E18BC778A125}
