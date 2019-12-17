@@ -5,7 +5,7 @@
     <PackageId>nacos-config-sdk</PackageId>
     <Authors>cts</Authors>
     <Product />
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
     <PackageProjectUrl>https://github.com/lovachen/nacos-config-csharp-sdk</PackageProjectUrl>
     <Description>阿里开源nacos的配置读取、监听，适配nacos 1.1.4 版本api接口</Description>
   </PropertyGroup>
