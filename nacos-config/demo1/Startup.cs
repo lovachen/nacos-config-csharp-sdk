@@ -52,7 +52,7 @@ namespace demo1
                 {
                     DataId="com.user.servier.api",
                     Group="DEFAULT_GROUP",
-                    Tenant="",
+                    //Tenant="",
                 }.Add(x=>{
                     System.Diagnostics.Debug.WriteLine($"call back 1============{x}");
                 }).Add(x =>
@@ -63,7 +63,7 @@ namespace demo1
                 {
                     DataId="com.api.order.json",
                     Group="DEFAULT_GROUP",
-                    Tenant="",
+                    //Tenant="",
                 }.Add(x =>
                 {
                     System.Diagnostics.Debug.WriteLine($"call back 1 {x}");

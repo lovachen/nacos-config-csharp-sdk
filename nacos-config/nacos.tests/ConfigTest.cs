@@ -14,8 +14,7 @@ namespace nacos.tests
            var cf = await _nacosClient.GetConfigAsync(new NacosConfig.Options.ConfigParams()
             {
                 DataId= "com.user.servier.api",
-                Group= "DEFAULT_GROUP",
-                Tenant = "",
+                Group= "DEFAULT_GROUP", 
             });
             Assert.NotNull(cf);
         }
