@@ -19,6 +19,6 @@ namespace NacosConfig.Options
         /// <summary>
         /// 配置监听间隔 毫秒为单位 默认1000ms
         /// </summary>
-        public int ListenInterval { get; set; } = 1000;
+        public int ListenInterval { get; set; } = 10000;
     }
 }

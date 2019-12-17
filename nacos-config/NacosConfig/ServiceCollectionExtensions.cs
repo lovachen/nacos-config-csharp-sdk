@@ -8,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 using NacosConfig.Failover;
 using NacosConfig;
 using NacosConfig.Infrastructure;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using System.Collections.Generic;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -31,8 +34,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddOptions();
             services.Configure(configure);
-            services.AddHttpClient(Constant.CLIENT_NAME).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler() { UseProxy = false });
-            services.AddMemoryCache();
+            services.AddHttpClient(Constant.CLIENT_NAME).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler() { UseProxy = false }); 
             services.AddSingleton<INacosClient, NacosClient>();
             services.AddSingleton<ILocalProcessor, LocalProcessor>();
 
@@ -56,8 +58,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.Configure<NacosOptions>(configuration.GetSection(sectionName));
             services.AddHttpClient(Constant.CLIENT_NAME)
-                .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler() { UseProxy = false });
-            services.AddMemoryCache();
+                .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler() { UseProxy = false }); 
             services.AddSingleton<ILocalProcessor, LocalProcessor>();
             services.AddSingleton<INacosClient, NacosClient>();
 
@@ -65,8 +66,26 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
 
-
-
+        /// <summary>
+        /// 应用启动时注册监听
+        /// 也可以不使用此方法，手动去注册监听
+        /// </summary>
+        /// <param name="app"></param>
+        /// <returns></returns>
+        public static IApplicationBuilder UserNacos(this IApplicationBuilder app,List<ListenerParams> options)
+        { 
+            var lifetime = app.ApplicationServices.GetRequiredService<IApplicationLifetime>();
+            var nacosClient = app.ApplicationServices.GetRequiredService<INacosClient>();
+            //启动程序时开启监听
+            lifetime.ApplicationStarted.Register(() =>
+            {
+                foreach(var op in options)
+                {
+                    nacosClient.AddListenerAsync(op);
+                }
+            });
+            return app;
+        }
 
 
 

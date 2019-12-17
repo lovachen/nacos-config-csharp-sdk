@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NacosConfig.Base;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,21 +9,8 @@ namespace NacosConfig.Options
     /// 
     /// </summary>
     [Serializable]
-    public class ConfigParams
+    public class ConfigParams: BaseParam
     {
-        /// <summary>
-        /// 配置 ID。
-        /// </summary>
-        public string DataId { get; internal set; }
-
-        /// <summary>
-        /// 配置分组。
-        /// </summary>
-        public string Group { get; internal set; }
-
-        /// <summary>
-        /// 租户信息，对应 Nacos 的命名空间字段。
-        /// </summary>
-        public string Tenant { get; internal set; }
+        
     }
 }

@@ -20,6 +20,7 @@ namespace NacosConfig.Infrastructure
     /// </summary>
     public class NacosClient : INacosClient
     {
+        private readonly static Dictionary<string, Timer> listeners = new Dictionary<string, Timer>();
         private ILogger _logger;
         private HttpClient _httpClient;
         private IHttpClientFactory _httpClientFactory;
@@ -74,7 +75,8 @@ namespace NacosConfig.Infrastructure
             {
                 await _localProcessor.SaveConfigAsync(configParams.DataId, configParams.Group, configParams.Tenant, config);
             }
-            return null;
+            System.Diagnostics.Debug.WriteLine($"配置={config}");
+            return config;
         }
 
         /// <summary>
@@ -87,14 +89,27 @@ namespace NacosConfig.Infrastructure
             if (listenerParams == null)
                 throw new ArgumentNullException(nameof(listenerParams));
 
+            string key = $"{listenerParams.DataId}-{listenerParams.Group}-{listenerParams.Tenant}";
+
+            //如果已添加过监听
+            if (listeners.ContainsKey(key.ToLower()))
+            {
+                return Task.CompletedTask;
+            }
+
+
             Timer timer = new Timer(async o =>
             {
-                await PollingAsync(o);
-
+                var p = (ListenerParams)o;
+                if (0 == Interlocked.Exchange(ref p.InterNum, 1))
+                {
+                    await PollingAsync(o);
+                    Interlocked.Exchange(ref p.InterNum, 0);
+                }
             }, listenerParams, 0, _options.ListenInterval);
 
-
-
+            //
+            listeners.Add(key.ToLower(), timer);
 
             return Task.CompletedTask;
         }
@@ -136,50 +151,63 @@ namespace NacosConfig.Infrastructure
             var param = (ListenerParams)info;
 
             //获取本地
-            var localConfig = await _localProcessor.GetConfigAsync(param.DataId, param.Group, param.Tenant);
+            var localConfig = await _localProcessor.GetConfigAsync(param.DataId, param.Group, param.Tenant) ?? "";
 
-            var client = _httpClientFactory.CreateClient(Constant.CLIENT_NAME);
-            client.BaseAddress = new Uri(_options.VHosts);
-            client.Timeout = TimeSpan.FromSeconds(Constant.LONG_TIMEOUT + 10);
-
-            string data = String.IsNullOrEmpty(param.Tenant) ? $"{param.DataId}{Char.ConvertFromUtf32(2)}{param.Group}{Char.ConvertFromUtf32(2)}{MD5Util.GetMD5(localConfig)}{Char.ConvertFromUtf32(1)}"
-                            : $"{param.DataId}{Char.ConvertFromUtf32(2)}{param.Group}{Char.ConvertFromUtf32(2)}{MD5Util.GetMD5(localConfig)}{Char.ConvertFromUtf32(2)}{param.Tenant}{Char.ConvertFromUtf32(1)}";
-
-            HttpContent content = new StringContent($"Listening-Configs={data}");
-            content.Headers.TryAddWithoutValidation("Long-Pulling-Timeout", (Constant.LONG_TIMEOUT * 1000).ToString());
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
-
-            var response = await client.PostAsync("nacos/v1/cs/configs/listener", content);
-             
-            switch (response.StatusCode)
+            try
             {
-                case System.Net.HttpStatusCode.OK: 
-                    var config = await response.Content.ReadAsStringAsync();
-                    if (!String.IsNullOrWhiteSpace(config))
-                    {
-                        await _localProcessor.SaveConfigAsync(param.DataId, param.Group, param.Tenant, config);
-                        try
+                var client = _httpClientFactory.CreateClient(Constant.CLIENT_NAME);
+                client.BaseAddress = new Uri(_options.VHosts);
+                client.Timeout = TimeSpan.FromSeconds(Constant.LONG_TIMEOUT + 10);
+
+                string one = Char.ConvertFromUtf32(1);
+                string tow = Char.ConvertFromUtf32(2);
+                string data = String.IsNullOrEmpty(param.Tenant) ? $"{param.DataId}{tow}{param.Group}{tow}{MD5Util.GetMD5(localConfig)}{one}"
+                                : $"{param.DataId}{tow}{param.Group}{tow}{MD5Util.GetMD5(localConfig)}{tow}{param.Tenant}{one}";
+
+                HttpContent content = new StringContent($"Listening-Configs={data}");
+                content.Headers.TryAddWithoutValidation("Long-Pulling-Timeout", (Constant.LONG_TIMEOUT * 1000).ToString());
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+
+                var response = await client.PostAsync("nacos/v1/cs/configs/listener", content);
+
+                switch (response.StatusCode)
+                {
+                    case System.Net.HttpStatusCode.OK:
+                        var res = await response.Content.ReadAsStringAsync();
+                        if (!String.IsNullOrWhiteSpace(res))
                         {
-                            if (param.Callback != null)
+                            var config = await GetConfigAsync(new ConfigParams() { DataId = param.DataId, Group = param.Group, Tenant = param.Tenant });
+                            System.Diagnostics.Debug.WriteLine($"监听配置={config}");
+                            await _localProcessor.SaveConfigAsync(param.DataId, param.Group, param.Tenant, config);
+                            try
                             {
-                                param.Callback(config);
+                                if (param.Callbacks != null)
+                                {
+                                    param.Callbacks.ForEach(cb =>
+                                    {
+                                        cb(config);
+                                    });
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(ex, $"[listener] call back 错误, dataId={param.DataId}, group={param.Group}, tenant={param.Tenant}");
                             }
                         }
-                        catch (Exception ex)
-                        {
-                            _logger.LogError(ex, $"[listener] call back 错误, dataId={param.DataId}, group={param.Group}, tenant={param.Tenant}");
-                        }
-                    }
-                    break;
-                case System.Net.HttpStatusCode.Forbidden: 
-                    _logger.LogError($"[listener] 请求无权限, dataId={param.DataId}, group={param.Group}, tenant={param.Tenant}, code={(int)response.StatusCode}");
-                    throw new Exception($"Insufficient privilege.");
-                default: 
-                    _logger.LogError($"[listener] 错误, dataId={param.DataId}, group={param.Group}, tenant={param.Tenant}, code={(int)response.StatusCode}");
-                    throw new Exception(response.StatusCode.ToString());
+                        break;
+                    case System.Net.HttpStatusCode.Forbidden:
+                        _logger.LogError($"[listener] 请求无权限, dataId={param.DataId}, group={param.Group}, tenant={param.Tenant}, code={(int)response.StatusCode}");
+                        throw new Exception($"Insufficient privilege.");
+                    default:
+                        _logger.LogError($"[listener] 错误, dataId={param.DataId}, group={param.Group}, tenant={param.Tenant}, code={(int)response.StatusCode}");
+                        throw new Exception(response.StatusCode.ToString());
+                }
             }
-     
-            
+            catch (Exception ex)
+            {
+                _logger.LogError($"[listener] 错误, dataId={param.DataId}, group={param.Group}, tenant={param.Tenant}, 描述={ex.Message}");
+            }
+
         }
 
 

@@ -8,5 +8,9 @@
     <ProjectReference Include="..\NacosConfig\NacosConfig.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="nacos-config\" />
+  </ItemGroup>
+
 
 </Project>

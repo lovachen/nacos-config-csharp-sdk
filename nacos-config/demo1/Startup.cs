@@ -45,6 +45,30 @@ namespace demo1
             {
                 endpoints.MapControllers();
             });
+
+            app.UserNacos(new List<ListenerParams>()
+            {
+                new ListenerParams()
+                {
+                    DataId="com.user.servier.api",
+                    Group="DEFAULT_GROUP",
+                    Tenant="",
+                }.Add(x=>{
+                    System.Diagnostics.Debug.WriteLine($"call back 1============{x}");
+                }).Add(x =>
+                {
+                    System.Diagnostics.Debug.WriteLine($"call back 2============{x}");
+                }),
+                new ListenerParams()
+                {
+                    DataId="com.api.order.json",
+                    Group="DEFAULT_GROUP",
+                    Tenant="",
+                }.Add(x =>
+                {
+                    System.Diagnostics.Debug.WriteLine($"call back 1 {x}");
+                })
+            });
         }
     }
 }
