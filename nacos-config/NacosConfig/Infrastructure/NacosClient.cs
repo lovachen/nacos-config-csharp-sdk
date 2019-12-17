@@ -114,6 +114,63 @@ namespace NacosConfig.Infrastructure
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// 发布配置
+        /// </summary>
+        /// <param name="publishParams"></param>
+        /// <returns></returns>
+        public async Task<bool> PublishConfigAsync(PublishParams publishParams)
+        {
+            var client = _httpClientFactory.CreateClient(Constant.CLIENT_NAME);
+            client.BaseAddress = new Uri(_options.VHosts);
+            HttpContent content = new StringContent($"dataId={publishParams.DataId}&group={publishParams.Group}&tenant={publishParams.Tenant}&content={publishParams.Content}&type={publishParams.Type}");
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+
+            var response = await client.PostAsync("nacos/v1/cs/configs", content);
+            switch (response.StatusCode)
+            {
+                case System.Net.HttpStatusCode.OK:
+                    _logger.LogInformation($"发布配置成功, dataId={publishParams.DataId}, group={publishParams.Group}, tenant={publishParams.Tenant}, config={publishParams.Content}");
+                    var result = await response.Content.ReadAsStringAsync();
+                    return result.Equals("true", StringComparison.OrdinalIgnoreCase);
+                case System.Net.HttpStatusCode.Forbidden:
+                    _logger.LogError($"发布配置失败，无权限, dataId={publishParams.DataId}, group={publishParams.Group}, tenant={publishParams.Tenant}, code={response.StatusCode}");
+                    throw new Exception($"发布配置失败，无权限");
+                default:
+                    _logger.LogWarning($"发布配置失败, dataId={publishParams.DataId}, group={publishParams.Group}, tenant={publishParams.Tenant}, code={response.StatusCode}，描述={response.Content.ReadAsStringAsync()}");
+                    return false;
+            }
+        }
+
+
+        /// <summary>
+        /// 发布配置
+        /// </summary>
+        /// <param name="deleteParams"></param> 
+        /// <returns></returns>
+        public async Task<bool> DeleteConfigAsync(DeleteParams deleteParams)
+        {
+            var client = _httpClientFactory.CreateClient(Constant.CLIENT_NAME);
+            client.BaseAddress = new Uri(_options.VHosts);
+
+            var response = await client.DeleteAsync($"/nacos/v1/cs/configs?dataId={deleteParams.DataId}&group={deleteParams.Group}&tenant={deleteParams.Tenant}");
+            switch (response.StatusCode)
+            {
+                case System.Net.HttpStatusCode.OK:
+                    _logger.LogInformation($"删除配置成功, dataId={deleteParams.DataId}, group={deleteParams.Group}, tenant={deleteParams.Tenant}");
+                    var result = await response.Content.ReadAsStringAsync();
+                    return result.Equals("true", StringComparison.OrdinalIgnoreCase);
+                case System.Net.HttpStatusCode.Forbidden:
+                    _logger.LogError($"删除配置失败，无权限, dataId={deleteParams.DataId}, group={deleteParams.Group}, tenant={deleteParams.Tenant}, code={response.StatusCode}");
+                    throw new Exception($"删除配置无权限");
+                default:
+                    _logger.LogWarning($"删除配置失败, dataId={deleteParams.DataId}, group={deleteParams.Group}, tenant={deleteParams.Tenant}, code={response.StatusCode}，描述={response.Content.ReadAsStringAsync()}");
+                    return false;
+            }
+        }
+
+
+
 
 
         #region private
@@ -209,15 +266,6 @@ namespace NacosConfig.Infrastructure
             }
 
         }
-
-
-
-
-
-
-
-
-
 
         #endregion
 

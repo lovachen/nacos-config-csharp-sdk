@@ -115,6 +115,11 @@
             <param name="tenant"></param>
             <returns></returns>
         </member>
+        <member name="T:NacosConfig.INacosClient">
+            <summary>
+            客户端
+            </summary>
+        </member>
         <member name="M:NacosConfig.INacosClient.GetConfigAsync(NacosConfig.Options.ConfigParams)">
             <summary>
             获取配置
@@ -127,6 +132,20 @@
             添加监听
             </summary>
             <param name="listenerParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NacosConfig.INacosClient.PublishConfigAsync(NacosConfig.Options.PublishParams)">
+            <summary>
+            发布配置
+            </summary>
+            <param name="publishParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NacosConfig.INacosClient.DeleteConfigAsync(NacosConfig.Options.DeleteParams)">
+            <summary>
+            删除配置
+            </summary>
+            <param name="deleteParams"></param>
             <returns></returns>
         </member>
         <member name="T:NacosConfig.Infrastructure.NacosClient">
@@ -156,6 +175,20 @@
             <param name="listenerParams"></param>
             <returns></returns>
         </member>
+        <member name="M:NacosConfig.Infrastructure.NacosClient.PublishConfigAsync(NacosConfig.Options.PublishParams)">
+            <summary>
+            发布配置
+            </summary>
+            <param name="publishParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NacosConfig.Infrastructure.NacosClient.DeleteConfigAsync(NacosConfig.Options.DeleteParams)">
+            <summary>
+            发布配置
+            </summary>
+            <param name="deleteParams"></param> 
+            <returns></returns>
+        </member>
         <member name="M:NacosConfig.Infrastructure.NacosClient.HttpGetConfigAsync(NacosConfig.Options.ConfigParams)">
             <summary>
             http请求获取配置
@@ -172,6 +205,11 @@
         <member name="T:NacosConfig.Options.ConfigParams">
             <summary>
             
+            </summary>
+        </member>
+        <member name="T:NacosConfig.Options.DeleteParams">
+            <summary>
+            删除参数
             </summary>
         </member>
         <member name="T:NacosConfig.Options.ListenerParams">
@@ -210,6 +248,21 @@
         <member name="P:NacosConfig.Options.NacosOptions.ListenInterval">
             <summary>
             配置监听间隔 毫秒为单位 默认1000ms
+            </summary>
+        </member>
+        <member name="T:NacosConfig.Options.PublishParams">
+            <summary>
+            发布配置参数
+            </summary>
+        </member>
+        <member name="P:NacosConfig.Options.PublishParams.Content">
+            <summary>
+            配置内容
+            </summary>
+        </member>
+        <member name="P:NacosConfig.Options.PublishParams.Type">
+            <summary>
+            配置类型
             </summary>
         </member>
         <member name="M:NacosConfig.Util.MD5Util.GetMD5(System.String)">

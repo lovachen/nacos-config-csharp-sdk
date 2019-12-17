@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace NacosConfig
 {
+    /// <summary>
+    /// 客户端
+    /// </summary>
     public interface INacosClient
     {
         /// <summary>
@@ -21,5 +24,19 @@ namespace NacosConfig
         /// <param name="listenerParams"></param>
         /// <returns></returns>
         Task AddListenerAsync(ListenerParams listenerParams);
+ 
+        /// <summary>
+        /// 发布配置
+        /// </summary>
+        /// <param name="publishParams"></param>
+        /// <returns></returns>
+        Task<bool> PublishConfigAsync(PublishParams publishParams);
+
+        /// <summary>
+        /// 删除配置
+        /// </summary>
+        /// <param name="deleteParams"></param>
+        /// <returns></returns>
+        Task<bool> DeleteConfigAsync(DeleteParams deleteParams);
     }
 }
