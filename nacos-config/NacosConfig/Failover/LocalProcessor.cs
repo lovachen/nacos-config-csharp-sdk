@@ -72,7 +72,7 @@ namespace NacosConfig.Failover
             {
                 writerLockSlim.EnterWriteLock();
                 string key = GetCacheKey(dataId, group, tenant).ToLower();
-
+                //首次移除
                 _cache.Remove(key, out string _);
 
                 string file_dir = GetFilePath(dataId, group, tenant);
@@ -80,6 +80,7 @@ namespace NacosConfig.Failover
 
                 if (file.Exists)
                     File.Delete(file.FullName);
+                //再次移除
                 _cache.Remove(key, out string _);
             }
             catch (Exception ex)
@@ -110,8 +111,8 @@ namespace NacosConfig.Failover
                 writerLockSlim.EnterWriteLock();
 
                 string key = GetCacheKey(dataId, group, tenant);
-                //
-                _cache.Remove(key, out string _);
+                //首次更新或写入缓存
+                _cache.AddOrUpdate(key,config,(k,v)=> config);
 
                 string file_dir = GetFilePath(dataId, group, tenant);
                 var file = new FileInfo(file_dir);
@@ -121,6 +122,8 @@ namespace NacosConfig.Failover
                     file.Directory.Create();
                 //写入内容
                 File.WriteAllText(file.FullName, config);
+                //再次更新或写入缓存
+                _cache.AddOrUpdate(key, config, (k, v) => config);
             }
             catch (Exception ex)
             {
