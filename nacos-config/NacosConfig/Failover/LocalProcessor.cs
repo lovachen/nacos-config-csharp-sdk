@@ -24,6 +24,10 @@ namespace NacosConfig.Failover
         private readonly static ConcurrentDictionary<string, string> _cache = new ConcurrentDictionary<string, string>();
         private ILogger _logger;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="loggerFactory"></param>
         public LocalProcessor(ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<ILocalProcessor>();
